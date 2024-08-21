@@ -47,6 +47,42 @@ renderer.render(scene, camera);
  controls.autoRotateSpeed = 5;
 
 
+// Create star geometry and material
+const starGeometry = new THREE.SphereGeometry(0.1, 24, 24);
+const starMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+
+// Function to create a star
+const createStar = () => {
+  const star = new THREE.Mesh(starGeometry, starMaterial);
+
+  // Randomly position the star
+  const [x, y, z] = Array(3)
+    .fill()
+    .map(() => THREE.MathUtils.randFloatSpread(100));
+
+  star.position.set(x, y, z);
+  scene.add(star);
+  return star;
+};
+
+// Create multiple stars
+const stars = Array(200).fill().map(createStar);
+
+// Animate the stars
+gsap.to(stars, {
+  z: "+=50",
+  repeat: -1,
+  yoyo: true,
+  ease: "none",
+  duration: 50,
+  onUpdate: () => {
+    stars.forEach(star => {
+      if (star.position.z > 50) {
+        star.position.z = -50;
+      }
+    });
+  },
+});
 
 
 
